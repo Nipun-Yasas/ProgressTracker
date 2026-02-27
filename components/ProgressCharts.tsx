@@ -190,7 +190,7 @@ export default function ProgressCharts({
 
             <div className="h-[300px] w-full">
                 {activeTab === "daily" && (
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="100%" height={300}>
                         <BarChart data={dailyData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                             <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
                             <XAxis dataKey="day" stroke="#71717a" fontSize={12} tickLine={false} axisLine={false} dy={10} />
@@ -202,7 +202,7 @@ export default function ProgressCharts({
                 )}
 
                 {activeTab === "weekly" && (
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="100%" height={300}>
                         <BarChart data={weeklyData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                             <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
                             <XAxis dataKey="week" stroke="#71717a" fontSize={12} tickLine={false} axisLine={false} dy={10} />
@@ -214,7 +214,7 @@ export default function ProgressCharts({
                 )}
 
                 {activeTab === "monthly" && (
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="100%" height={300}>
                         <RadarChart cx="50%" cy="50%" outerRadius="70%" data={monthlyData}>
                             <PolarGrid stroke="#3f3f46" />
                             <PolarAngleAxis dataKey="subject" tick={{ fill: '#a1a1aa', fontSize: 11 }} />
