@@ -5,15 +5,20 @@ import { format } from "date-fns";
 import toast from "react-hot-toast";
 import MonthSelector from "@/components/MonthSelector";
 import ActivityManager from "@/components/ActivityManager";
+import ActivityManagerSkeleton from "@/components/skeletons/ActivityManagerSkeleton";
 import DailyChecklist from "@/components/DailyChecklist";
+import DailyChecklistSkeleton from "@/components/skeletons/DailyChecklistSkeleton";
 import ProgressCharts from "@/components/ProgressCharts";
+import ProgressChartsSkeleton from "@/components/skeletons/ProgressChartsSkeleton";
 import { IActivity } from "@/lib/models/Activity";
 import { IDailyLog } from "@/lib/models/DailyLog";
 import { Target } from "lucide-react";
 import mongoose from "mongoose";
 
 export default function Home() {
-  const [currentMonth, setCurrentMonth] = useState(() => format(new Date(), "yyyy-MM"));
+  const [currentMonth, setCurrentMonth] = useState(() =>
+    format(new Date(), "yyyy-MM"),
+  );
   const [activities, setActivities] = useState<IActivity[]>([]);
   const [logs, setLogs] = useState<IDailyLog[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -67,7 +72,12 @@ export default function Home() {
   };
 
   const handleDeleteActivity = async (id: string) => {
-    if (!confirm("Are you sure? This will delete the activity and all its history.")) return;
+    if (
+      !confirm(
+        "Are you sure? This will delete the activity and all its history.",
+      )
+    )
+      return;
 
     try {
       const res = await fetch(`/api/activities/${id}`, {
@@ -75,7 +85,9 @@ export default function Home() {
       });
 
       if (res.ok) {
-        setActivities((prev) => prev.filter((a) => (a._id as unknown as string) !== id));
+        setActivities((prev) =>
+          prev.filter((a) => (a._id as unknown as string) !== id),
+        );
         setLogs((prev) => prev.filter((l) => l.activityId.toString() !== id));
         toast.success("Activity deleted");
       } else {
@@ -87,20 +99,31 @@ export default function Home() {
     }
   };
 
-  const handleToggleTick = async (activityId: string, date: string, done: boolean) => {
+  const handleToggleTick = async (
+    activityId: string,
+    date: string,
+    done: boolean,
+  ) => {
     // Optimistic UI update
     setLogs((prev) => {
       const existing = prev.find(
-        (l) => l.activityId.toString() === activityId && l.date === date
+        (l) => l.activityId.toString() === activityId && l.date === date,
       );
       if (existing) {
         return prev.map((l) =>
           l.activityId.toString() === activityId && l.date === date
-            ? { ...l, done } as IDailyLog
-            : l
+            ? ({ ...l, done } as IDailyLog)
+            : l,
         );
       } else {
-        return [...prev, { activityId: activityId as unknown as mongoose.Types.ObjectId, date, done } as unknown as IDailyLog];
+        return [
+          ...prev,
+          {
+            activityId: activityId as unknown as mongoose.Types.ObjectId,
+            date,
+            done,
+          } as unknown as IDailyLog,
+        ];
       }
     });
 
@@ -154,14 +177,15 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-zinc-950 text-zinc-100 selection:bg-emerald-500/30 font-sans p-4 md:p-8">
       <div className="max-w-7xl mx-auto space-y-6">
-
         <header className="flex items-center gap-3 pb-6 border-b border-zinc-800">
           <div className="bg-emerald-500/10 p-2 rounded-xl border border-emerald-500/20">
             <Target className="w-8 h-8 text-emerald-500" />
           </div>
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Progress Flow</h1>
-            <p className="text-zinc-500 text-sm">Stay consistent, track your daily habits.</p>
+            <p className="text-zinc-500 text-sm">
+              Stay consistent, track your daily habits.
+            </p>
           </div>
         </header>
 
@@ -174,32 +198,44 @@ export default function Home() {
               showCopyButton={activities.length === 0 && !isLoading}
             />
 
-            <div className="h-[400px] lg:h-[calc(100vh-320px)] min-h-[400px]">
-              <ActivityManager
-                activities={activities}
-                onAddActivity={handleAddActivity}
-                onDeleteActivity={handleDeleteActivity}
-                isLoading={isLoading}
-              />
-            </div>
+            {isLoading ? (
+              <ActivityManagerSkeleton />
+            ) : (
+              <div className="">
+                <ActivityManager
+                  activities={activities}
+                  onAddActivity={handleAddActivity}
+                  onDeleteActivity={handleDeleteActivity}
+                  isLoading={isLoading}
+                />
+              </div>
+            )}
           </div>
 
           <div className="lg:col-span-3 space-y-6 flex flex-col h-full">
-            <div className="h-[400px] lg:h-[500px]">
-              <DailyChecklist
+            {isLoading ? (
+              <DailyChecklistSkeleton />
+            ) : (
+              <div className="">
+                <DailyChecklist
+                  activities={activities}
+                  logs={logs}
+                  currentMonth={currentMonth}
+                  onToggleTick={handleToggleTick}
+                  isLoading={isLoading}
+                />
+              </div>
+            )}
+
+            {isLoading ? (
+              <ProgressChartsSkeleton />
+            ) : (
+              <ProgressCharts
                 activities={activities}
                 logs={logs}
                 currentMonth={currentMonth}
-                onToggleTick={handleToggleTick}
-                isLoading={isLoading}
               />
-            </div>
-
-            <ProgressCharts
-              activities={activities}
-              logs={logs}
-              currentMonth={currentMonth}
-            />
+            )}
           </div>
         </div>
       </div>

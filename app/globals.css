@@ -2,4 +2,32 @@
 
 body {
   font-family: Arial, Helvetica, sans-serif;
+  background-color: #09090b; /* zinc-950 */
+  color: #f4f4f5; /* zinc-100 */
+}
+
+/* Custom Scrollbar for all elements */
+::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #09090b; /* zinc-950 */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #3f3f46; /* zinc-700 */
+  border-radius: 20px;
+  border: 2px solid #09090b; /* Padding effect around thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #52525b; /* zinc-600 */
+}
+
+/* Also apply to Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #3f3f46 #09090b;
 }
