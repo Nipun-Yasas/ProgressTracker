@@ -10,6 +10,7 @@ import DailyChecklist from "@/components/DailyChecklist";
 import DailyChecklistSkeleton from "@/components/skeletons/DailyChecklistSkeleton";
 import ProgressCharts from "@/components/ProgressCharts";
 import ProgressChartsSkeleton from "@/components/skeletons/ProgressChartsSkeleton";
+import TargetsSection from "@/components/Targets";
 import { IActivity } from "@/lib/models/Activity";
 import { IDailyLog } from "@/lib/models/DailyLog";
 import { Target } from "lucide-react";
@@ -188,6 +189,8 @@ export default function Home() {
             </p>
           </div>
         </header>
+
+        <TargetsSection />
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           <div className="lg:col-span-1 space-y-6">
