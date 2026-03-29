@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import Target from "@/lib/models/Target";
+import { auth } from "@clerk/nextjs/server";
 
 export async function DELETE(
   req: NextRequest,
@@ -8,9 +9,15 @@ export async function DELETE(
 ) {
   try {
     const { id } = await context.params;
+
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     await dbConnect();
 
-    const deletedTarget = await Target.findByIdAndDelete(id);
+    const deletedTarget = await Target.findOneAndDelete({ _id: id, userId });
 
     if (!deletedTarget) {
       return NextResponse.json(
@@ -35,6 +42,12 @@ export async function PUT(
 ) {
   try {
     const { id } = await context.params;
+
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const body = await req.json();
     const { description } = body;
     
@@ -47,8 +60,8 @@ export async function PUT(
 
     await dbConnect();
 
-    const updatedTarget = await Target.findByIdAndUpdate(
-      id,
+    const updatedTarget = await Target.findOneAndUpdate(
+      { _id: id, userId },
       { description },
       { new: true, runValidators: true }
     );

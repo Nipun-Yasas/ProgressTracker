@@ -34,10 +34,10 @@ export default function ActivityManager({
   };
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-xl shadow-lg flex flex-col h-full">
+    <div className="bg-backgroundSecondary/60 border border-borderPrimary p-6 rounded-xl flex flex-col h-full">
       <div className="flex items-center gap-2 mb-6">
-        <ActivityIcon className="w-5 h-5 text-emerald-500" />
-        <h3 className="text-lg font-medium text-zinc-100">Activities</h3>
+        <ActivityIcon className="w-5 h-5 text-primary" />
+        <h3 className="text-lg font-medium text-textPrimary">Activities</h3>
       </div>
 
       <form onSubmit={handleSubmit} className="flex gap-2 mb-6">
@@ -46,13 +46,13 @@ export default function ActivityManager({
           value={newActivityName}
           onChange={(e) => setNewActivityName(e.target.value)}
           placeholder="e.g. Read 10 pages..."
-          className="flex-1 bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all"
+          className="flex-1 bg-backgroundSecondary border border-borderPrimary rounded-lg px-4 py-2 text-sm text-textPrimary placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
           disabled={isLoading || isSubmitting}
         />
         <button
           type="submit"
           disabled={!newActivityName.trim() || isLoading || isSubmitting}
-          className="bg-emerald-600 hover:bg-emerald-500 text-white p-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[40px]"
+          className="bg-backgroundSecondary hover:bg-hoverPrimary disabled:bg-hoverPrimary disabled:text-textSecondary border border-borderPrimary p-2 rounded-lg disabled:cursor-not-allowed flex items-center justify-center min-w-[40px]"
           aria-label="Add activity"
         >
           <Plus className="w-5 h-5" />
@@ -61,16 +61,16 @@ export default function ActivityManager({
 
       <div className="flex-1 overflow-y-auto space-y-2 pr-2 custom-scrollbar">
         {activities.length === 0 ? (
-          <div className="text-center py-8 text-zinc-500 text-sm">
+          <div className="text-center py-8 text-textSecondary text-sm">
             No activities set for this month yet.
           </div>
         ) : (
           activities.map((activity) => (
             <div
               key={activity._id as unknown as string}
-              className="flex items-center justify-between p-3 rounded-lg bg-zinc-950/50 border border-zinc-800/50 hover:border-zinc-700 transition-colors group"
+              className="flex items-center justify-between p-3 rounded-lg bg-backgroundSecondary hover:bg-hoverPrimary border border-borderPrimary hover:border-borderPrimary transition-colors group"
             >
-              <span className="text-sm font-medium text-zinc-300 truncate pr-4">
+              <span className="text-sm font-medium text-textPrimary truncate pr-4">
                 {activity.name}
               </span>
               <button
@@ -78,7 +78,7 @@ export default function ActivityManager({
                   onDeleteActivity(activity._id as unknown as string)
                 }
                 disabled={isLoading}
-                className="text-zinc-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all focus:opacity-100 p-1 rounded hover:bg-zinc-800 disabled:opacity-50"
+                className="text-textSecondary hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all focus:opacity-100 p-1 rounded hover:bg-hoverPrimary disabled:opacity-50"
                 aria-label="Delete activity"
                 title="Delete activity"
               >

@@ -3,6 +3,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { format } from "date-fns";
 import toast from "react-hot-toast";
+import { Target } from "lucide-react";
+import mongoose from "mongoose";
+
 import MonthSelector from "@/components/MonthSelector";
 import ActivityManager from "@/components/ActivityManager";
 import ActivityManagerSkeleton from "@/components/skeletons/ActivityManagerSkeleton";
@@ -10,11 +13,12 @@ import DailyChecklist from "@/components/DailyChecklist";
 import DailyChecklistSkeleton from "@/components/skeletons/DailyChecklistSkeleton";
 import ProgressCharts from "@/components/ProgressCharts";
 import ProgressChartsSkeleton from "@/components/skeletons/ProgressChartsSkeleton";
-import TargetsSection from "@/components/Targets";
+import Targets from "@/components/Targets";
+
 import { IActivity } from "@/lib/models/Activity";
 import { IDailyLog } from "@/lib/models/DailyLog";
-import { Target } from "lucide-react";
-import mongoose from "mongoose";
+import { UserButton, Show } from "@clerk/nextjs";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function Home() {
   const [currentMonth, setCurrentMonth] = useState(() =>
@@ -176,21 +180,30 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-zinc-950 text-zinc-100 selection:bg-emerald-500/30 font-sans p-4 md:p-8">
+    <main className="min-h-screen p-4">
+
       <div className="max-w-7xl mx-auto space-y-6">
-        <header className="flex items-center gap-3 pb-6 border-b border-zinc-800">
-          <div className="bg-emerald-500/10 p-2 rounded-xl border border-emerald-500/20">
-            <Target className="w-8 h-8 text-emerald-500" />
+        <header className="flex bg-backgroundSecondary/60 p-3 sm:p-4 rounded-xl items-center justify-between gap-3 border-b border-borderPrimary">
+          <div className="flex items-center gap-3 p-1">
+            <div className="bg-secondary/10 p-1.5 sm:p-2 rounded-xl">
+              <Target className="w-5 h-5 sm:w-8 sm:h-8 text-secondary" />
+            </div>
+            <div className="flex flex-col">
+              <h1 className="text-xl sm:text-3xl font-bold tracking-tight">Progress Flow</h1>
+              <p className="text-textSecondary text-[10px] sm:text-sm leading-tight">
+                Stay consistent, track your daily habits.
+              </p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Progress Flow</h1>
-            <p className="text-zinc-500 text-sm">
-              Stay consistent, track your daily habits.
-            </p>
+          <div className="flex items-center gap-2">
+            <Show when="signed-in">
+              <UserButton />
+            </Show>
+            <ThemeToggle />
           </div>
         </header>
 
-        <TargetsSection />
+        <Targets />
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           <div className="lg:col-span-1 space-y-6">

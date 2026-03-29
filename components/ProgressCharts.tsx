@@ -46,18 +46,20 @@ const CustomTooltip = ({
 }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-zinc-950 border border-zinc-800 p-3 rounded-lg shadow-xl outline-none">
-        <p className="text-zinc-300 font-medium mb-1">
+      <div className="bg-background border border-borderPrimary p-3 rounded-lg shadow-xl outline-none">
+        <p className="text-textPrimary font-medium mb-1">
           {payload[0].payload.fullDate ||
             payload[0].payload.fullSubject ||
             label}
         </p>
-        <p className="text-emerald-400 font-semibold text-lg">
+        <p className="text-primary font-semibold text-lg">
           {payload[0].value}%{" "}
-          <span className="text-xs text-zinc-500 font-normal">completed</span>
+          <span className="text-xs text-textSecondary font-normal">
+            completed
+          </span>
         </p>
         {payload[0].payload.completed !== undefined && (
-          <p className="text-zinc-500 text-xs mt-1">
+          <p className="text-textSecondary text-xs mt-1">
             {payload[0].payload.completed} instance(s)
           </p>
         )}
@@ -171,7 +173,7 @@ export default function ProgressCharts({
 
   if (activities.length === 0) {
     return (
-      <div className="bg-zinc-900 border border-zinc-800 p-8 rounded-xl shadow-lg flex flex-col items-center justify-center h-[400px] text-zinc-500">
+      <div className="bg-backgroundSecondary border border-borderPrimary p-8 rounded-xl shadow-lg flex flex-col items-center justify-center h-[400px] text-textSecondary">
         <BarChart3 className="w-12 h-12 mb-4 opacity-20" />
         <p>No data to visualize yet.</p>
       </div>
@@ -179,20 +181,20 @@ export default function ProgressCharts({
   }
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-xl shadow-lg p-6">
+    <div className="bg-backgroundSecondary/60 border border-borderPrimary rounded-xl p-6">
       <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4">
-        <h3 className="text-lg font-medium text-zinc-100 flex items-center gap-2">
-          <Activity className="w-5 h-5 text-emerald-500" />
+        <h3 className="text-lg font-medium text-textPrimary flex items-center gap-2">
+          <Activity className="w-5 h-5 text-primary" />
           Progress Overview
         </h3>
 
-        <div className="flex bg-zinc-950/50 p-1 rounded-lg border border-zinc-800/50">
+        <div className="flex bg-background/50 p-1 rounded-lg border border-borderPrimary/50">
           <button
             onClick={() => setActiveTab("daily")}
             className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${
               activeTab === "daily"
-                ? "bg-zinc-800 text-zinc-100 shadow-sm"
-                : "text-zinc-400 hover:text-zinc-300"
+                ? "bg-hoverPrimary text-textPrimary shadow-sm"
+                : "text-textSecondary hover:text-textPrimary"
             }`}
           >
             Daily Flow
@@ -201,8 +203,8 @@ export default function ProgressCharts({
             onClick={() => setActiveTab("weekly")}
             className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${
               activeTab === "weekly"
-                ? "bg-zinc-800 text-zinc-100 shadow-sm"
-                : "text-zinc-400 hover:text-zinc-300"
+                ? "bg-hoverPrimary text-textPrimary shadow-sm"
+                : "text-textSecondary hover:text-textPrimary"
             }`}
           >
             Weekly Trend
@@ -211,8 +213,8 @@ export default function ProgressCharts({
             onClick={() => setActiveTab("monthly")}
             className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${
               activeTab === "monthly"
-                ? "bg-zinc-800 text-zinc-100 shadow-sm"
-                : "text-zinc-400 hover:text-zinc-300"
+                ? "bg-hoverPrimary text-textPrimary shadow-sm"
+                : "text-textSecondary hover:text-textPrimary"
             }`}
           >
             By Activity
@@ -297,7 +299,7 @@ export default function ProgressCharts({
               />
               <Bar
                 dataKey="percent"
-                fill="#3b82f6"
+                fill="#10b981"
                 radius={[4, 4, 0, 0]}
                 maxBarSize={60}
               />
@@ -321,8 +323,8 @@ export default function ProgressCharts({
               <Radar
                 name="Completion Rate"
                 dataKey="percent"
-                stroke="#8b5cf6"
-                fill="#8b5cf6"
+                stroke="#10b981"
+                fill="#10b981"
                 fillOpacity={0.3}
               />
               <Tooltip content={<CustomTooltip />} />

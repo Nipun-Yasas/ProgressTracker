@@ -99,7 +99,9 @@ export default function Targets() {
 
       if (res.ok) {
         const updatedTarget = await res.json();
-        setTargets((prev) => prev.map((t) => (t._id === id ? updatedTarget : t)));
+        setTargets((prev) =>
+          prev.map((t) => (t._id === id ? updatedTarget : t)),
+        );
         setEditingId(null);
         toast.success("Target updated");
       } else {
@@ -113,21 +115,21 @@ export default function Targets() {
 
   if (isLoading) {
     return (
-      <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800 space-y-4 animate-pulse">
-        <div className="h-6 w-32 bg-zinc-800 rounded"></div>
+      <div className="bg-backgroundSecondary/50 p-6 rounded-2xl border border-borderPrimary space-y-4 animate-pulse">
+        <div className="h-6 w-32 bg-hoverPrimary rounded"></div>
         <div className="space-y-3">
-          <div className="h-10 w-full bg-zinc-800 rounded"></div>
-          <div className="h-10 w-full bg-zinc-800 rounded"></div>
+          <div className="h-10 w-full bg-hoverPrimary rounded"></div>
+          <div className="h-10 w-full bg-hoverPrimary rounded"></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800 space-y-6">
+    <div className="bg-backgroundSecondary/60 p-6 rounded-2xl border border-borderPrimary space-y-6">
       <div className="flex items-center gap-3">
-        <div className="bg-amber-500/10 p-2 rounded-xl border border-amber-500/20">
-          <Target className="w-5 h-5 text-amber-500" />
+        <div className="bg-secondary/10 p-2 rounded-xl border border-secondary/20">
+          <Target className="w-5 h-5 text-secondary" />
         </div>
         <h2 className="text-xl font-bold tracking-tight">Main Targets</h2>
       </div>
@@ -136,40 +138,53 @@ export default function Targets() {
         {targets.length > 0 ? (
           <ul className="space-y-3">
             {targets.map((target) => (
-              <li key={target._id} className="flex items-center justify-between bg-zinc-900 p-3 rounded-xl border border-zinc-800 group">
+              <li
+                key={target._id}
+                className="flex items-center justify-between bg-backgroundSecondary hover:bg-hoverPrimary p-3 rounded-xl border border-borderPrimary group"
+              >
                 {editingId === target._id ? (
                   <div className="flex items-center flex-1 gap-2">
                     <input
                       type="text"
                       value={editDescription}
                       onChange={(e) => setEditDescription(e.target.value)}
-                      className="flex-1 bg-zinc-800/50 border border-zinc-700 rounded-lg px-3 py-1.5 text-sm text-zinc-100 focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+                      className="flex-1 bg-hoverPrimary/50 border border-borderPrimary rounded-lg px-3 py-1.5 text-sm text-textPrimary focus:outline-none focus:ring-2 focus:ring-secondary/50"
                       autoFocus
                       onKeyDown={(e) => {
                         if (e.key === "Enter") handleSaveEdit(target._id);
                         if (e.key === "Escape") setEditingId(null);
                       }}
                     />
-                    <button onClick={() => handleSaveEdit(target._id)} className="p-1.5 text-emerald-500 hover:bg-emerald-500/10 rounded-md transition-colors">
+                    <button
+                      onClick={() => handleSaveEdit(target._id)}
+                      className="p-1.5 text-primary hover:bg-primary/10 rounded-md transition-colors"
+                    >
                       <Check className="w-4 h-4" />
                     </button>
-                    <button onClick={() => setEditingId(null)} className="p-1.5 text-red-500 hover:bg-red-500/10 rounded-md transition-colors">
+                    <button
+                      onClick={() => setEditingId(null)}
+                      className="p-1.5 text-red-500 hover:bg-red-500/10 rounded-md transition-colors"
+                    >
                       <X className="w-4 h-4" />
                     </button>
                   </div>
                 ) : (
                   <>
-                    <span className="text-zinc-200 text-sm flex-1">{target.description}</span>
+                    <span className="text-textPrimary text-sm flex-1">
+                      {target.description}
+                    </span>
                     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                       <button
-                        onClick={() => handleEditTarget(target._id, target.description)}
-                        className="p-1.5 text-zinc-400 hover:text-amber-500 hover:bg-amber-500/10 rounded-md transition-colors title='Edit Target'"
+                        onClick={() =>
+                          handleEditTarget(target._id, target.description)
+                        }
+                        className="p-1.5 text-textSecondary hover:text-secondary hover:bg-secondary/10 rounded-md transition-colors title='Edit Target'"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleDeleteTarget(target._id)}
-                        className="p-1.5 text-zinc-400 hover:text-red-500 hover:bg-red-500/10 rounded-md transition-colors title='Delete Target'"
+                        className="p-1.5 text-textSecondary hover:text-red-500 hover:bg-red-500/10 rounded-md transition-colors title='Delete Target'"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -180,7 +195,9 @@ export default function Targets() {
             ))}
           </ul>
         ) : (
-          <p className="text-zinc-500 text-sm italic">No targets defined yet.</p>
+          <p className="text-textSecondary text-sm italic">
+            No targets defined yet.
+          </p>
         )}
 
         <form onSubmit={handleAddTarget} className="flex items-center gap-2">
@@ -189,12 +206,12 @@ export default function Targets() {
             value={newDescription}
             onChange={(e) => setNewDescription(e.target.value)}
             placeholder="Add a new target..."
-            className="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 focus:outline-none focus:ring-2 focus:ring-amber-500/50 placeholder:text-zinc-600 transition-all"
+            className="flex-1 bg-backgroundSecondary border border-borderPrimary rounded-xl px-4 py-2.5 text-sm text-textPrimary focus:outline-none focus:ring-2 focus:ring-secondary/50 placeholder:text-textSecondary transition-all"
           />
           <button
             type="submit"
             disabled={!newDescription.trim()}
-            className="flex items-center gap-2 px-4 py-2.5 bg-amber-500 hover:bg-amber-600 disabled:bg-zinc-800 disabled:text-zinc-500 text-zinc-950 font-medium rounded-xl transition-colors text-sm"
+            className="flex items-center gap-2 px-4 py-2.5 bg-backgroundSecondary hover:bg-hoverPrimary disabled:bg-hoverPrimary disabled:text-textSecondary border border-borderPrimary font-medium rounded-xl text-sm"
           >
             <Plus className="w-4 h-4" />
             <span className="hidden sm:inline">Add Target</span>
