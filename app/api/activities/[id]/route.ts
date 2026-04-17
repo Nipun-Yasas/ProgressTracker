@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import Activity from "@/lib/models/Activity";
 import DailyLog from "@/lib/models/DailyLog";
+import { auth } from "@clerk/nextjs/server";
 
 import { unstable_noStore as noStore } from "next/cache";
 
@@ -18,6 +19,11 @@ export async function DELETE(
     const resolvedParams = await params;
     const { id } = resolvedParams;
 
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     if (!id) {
       return NextResponse.json(
         { error: "Activity ID is required" },
@@ -28,7 +34,7 @@ export async function DELETE(
     await dbConnect();
 
     // Delete the activity
-    const deletedActivity = await Activity.findByIdAndDelete(id);
+    const deletedActivity = await Activity.findOneAndDelete({ _id: id, userId });
 
     if (!deletedActivity) {
       return NextResponse.json(
@@ -38,7 +44,7 @@ export async function DELETE(
     }
 
     // Also delete all associated logs
-    await DailyLog.deleteMany({ activityId: id });
+    await DailyLog.deleteMany({ activityId: id, userId });
 
     return NextResponse.json(
       { message: "Activity and associated logs deleted successfully" },
@@ -62,6 +68,11 @@ export async function PATCH(
     const resolvedParams = await params;
     const { id } = resolvedParams;
 
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     if (!id) {
       return NextResponse.json(
         { error: "Activity ID is required" },
@@ -81,8 +92,8 @@ export async function PATCH(
 
     await dbConnect();
 
-    const updatedActivity = await Activity.findByIdAndUpdate(
-      id,
+    const updatedActivity = await Activity.findOneAndUpdate(
+      { _id: id, userId },
       { name },
       { new: true, runValidators: true },
     );

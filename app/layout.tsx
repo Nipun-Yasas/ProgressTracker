@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
+import ThemeProvider from "@/components/ThemeProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -20,20 +22,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} antialiased`}>
-        {children}
-        <Toaster
-          position="bottom-right"
-          toastOptions={{
-            style: {
-              background: "#18181b",
-              color: "#f4f4f5",
-              border: "1px solid #27272a",
-            },
-          }}
-        />
-      </body>
+    <html lang="en" suppressHydrationWarning>
+      <ClerkProvider>
+        <body className={`${geistSans.variable} antialiased`}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+            <Toaster position="bottom-right" />
+          </ThemeProvider>
+        </body>
+      </ClerkProvider>
     </html>
   );
 }

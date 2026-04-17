@@ -1,9 +1,9 @@
 export default function ProgressChartsSkeleton() {
   return (
-    <div className="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl shadow-lg p-6 min-h-[300px] flex flex-col gap-6">
+    <div className="flex-1 bg-backgroundSecondary border border-borderPrimary rounded-xl shadow-lg p-6 min-h-[300px] flex flex-col gap-6">
       <div className="flex items-center gap-2">
-        <div className="w-5 h-5 bg-zinc-800 rounded-full animate-pulse" />
-        <div className="w-32 h-6 bg-zinc-800 rounded-md animate-pulse" />
+        <div className="w-5 h-5 bg-hoverPrimary rounded-full animate-pulse" />
+        <div className="w-32 h-6 bg-hoverPrimary rounded-md animate-pulse" />
       </div>
       <div className="flex-1 flex items-end gap-4 overflow-hidden">
         {/* Using a fixed array of pseudo-random heights to prevent hydration mismatches */}
@@ -13,7 +13,7 @@ export default function ProgressChartsSkeleton() {
         ].map((height, i) => (
           <div
             key={i}
-            className="flex-1 bg-zinc-800/50 rounded-t-sm animate-pulse min-w-[20px]"
+            className="flex-1 bg-hoverPrimary/50 rounded-t-sm animate-pulse min-w-[20px]"
             style={{ height: `${height}%` }}
           />
         ))}

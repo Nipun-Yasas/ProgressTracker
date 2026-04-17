@@ -1,12 +1,17 @@
 import { Schema, Document, model, models } from "mongoose";
 
 export interface IActivity extends Document {
+  userId: string;
   name: string;
   month: string; // "YYYY-MM" format
   createdAt: Date;
 }
 
 const ActivitySchema = new Schema<IActivity>({
+  userId: {
+    type: String,
+    required: [true, "Please provide the user ID."],
+  },
   name: {
     type: String,
     required: [true, "Please provide a name for this activity."],

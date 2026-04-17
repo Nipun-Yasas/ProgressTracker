@@ -83,24 +83,24 @@ export default function DailyChecklist({
 
   if (activities.length === 0) {
     return (
-      <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-xl shadow-lg flex items-center justify-center min-h-[300px]">
-        <p className="text-zinc-500">Add some activities to start tracking.</p>
+      <div className="bg-backgroundSecondary/60 border border-borderPrimary p-6 rounded-xl flex items-center justify-center min-h-[300px]">
+        <p className="text-textSecondary">Add some activities to start tracking.</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-xl shadow-lg overflow-hidden flex flex-col h-full">
+    <div className="bg-backgroundSecondary/60 border border-borderPrimary rounded-xl overflow-hidden flex flex-col h-full">
       <div
-        className="overflow-x-auto custom-scrollbar flex-1 relative"
+        className="overflow-x-auto flex-1 relative"
         ref={scrollContainerRef}
       >
         <table className="w-full text-sm text-left border-collapse">
-          <thead className="text-xs uppercase bg-zinc-950/80 text-zinc-400 sticky top-0 z-10 backdrop-blur-sm">
+          <thead className="text-xs uppercase text-textSecondary sticky top-0 z-10 bg-backgroundSecondary/80 backdrop-blur-md">
             <tr>
               <th
                 scope="col"
-                className="px-6 py-4 font-semibold w-48 sticky left-0 z-20 bg-zinc-950/95 backdrop-blur-md"
+                className="px-6 py-4 font-semibold w-48 sticky left-0 z-20 bg-backgroundSecondary border-r border-borderPrimary backdrop-blur-md"
               >
                 Activity
               </th>
@@ -113,7 +113,7 @@ export default function DailyChecklist({
                     key={day}
                     ref={isToday ? todayRef : null}
                     scope="col"
-                    className={`px-2 py-4 text-center min-w-[40px] font-medium border-l border-zinc-900 ${isToday ? "text-emerald-400 bg-zinc-950/95" : ""}`}
+                    className={`px-2 py-4 text-center min-w-[40px] font-medium border-l border-borderPrimary ${isToday ? "text-textPrimary bg-backgroundSecondary" : ""}`}
                   >
                     {day}
                   </th>
@@ -125,11 +125,11 @@ export default function DailyChecklist({
             {activities.map((activity) => (
               <tr
                 key={activity._id as unknown as string}
-                className="hover:bg-zinc-800/20 transition-colors"
+                className="hover:bg-hoverPrimary transition-colors"
               >
                 <th
                   scope="row"
-                  className="px-6 py-4 font-medium text-zinc-200 whitespace-nowrap sticky left-0 z-10 bg-zinc-900/95 backdrop-blur-md truncate max-w-[200px]"
+                  className="px-6 py-4 font-medium text-textPrimary whitespace-nowrap sticky left-0 z-10 bg-backgroundSecondary border-r border-borderPrimary backdrop-blur-md truncate max-w-[200px]"
                   title={activity.name}
                 >
                   {activity.name}
@@ -142,7 +142,7 @@ export default function DailyChecklist({
                   return (
                     <td
                       key={day}
-                      className="px-2 py-3 text-center border-l border-zinc-800/50"
+                      className="px-2 py-3 text-center border-l border-borderPrimary"
                     >
                       <button
                         onClick={() =>
@@ -155,8 +155,8 @@ export default function DailyChecklist({
                         disabled={isLoading}
                         className={`w-7 h-7 mx-auto rounded flex items-center justify-center transition-all ${
                           done
-                            ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shadow-[0_0_10px_rgba(16,185,129,0.1)]"
-                            : "bg-zinc-950 border border-zinc-800 hover:border-zinc-700 text-transparent hover:bg-zinc-800"
+                            ? "bg-primary/20 text-primary border border-primary/30"
+                            : "bg-background border border-borderPrimary hover:border-borderPrimary text-transparent hover:bg-hoverPrimary"
                         } disabled:opacity-50 disabled:cursor-not-allowed`}
                         aria-label={`Mark ${activity.name} on day ${day} as ${done ? "undone" : "done"}`}
                       >
