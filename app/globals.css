@@ -65,7 +65,7 @@
   --hover-primary: #222125;
   --btn-hover-text: #0a0a0a;
 
-  --border-primary: #141218;
+  --border-primary: #403d46;
 }
 
 html, body, * {
@@ -108,16 +108,6 @@ html:not(.light) body::before {
   100% {
     clip-path: polygon(100% 0, 100% 0, 100% 0);
   }
-}
-
-.no-visible-scrollbar {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  -webkit-overflow-scrolling: touch;
-}
-
-.no-visible-scrollbar::-webkit-scrollbar {
-  display: none;
 }
 
 ::view-transition-old(root),

@@ -83,7 +83,7 @@ export default function DailyChecklist({
 
   if (activities.length === 0) {
     return (
-      <div className="bg-backgroundSecondary/60 border border-borderPrimary p-6 rounded-xl flex items-center justify-center min-h-[300px]">
+      <div className="bg-backgroundSecondary border border-borderPrimary p-6 rounded-xl flex items-center justify-center min-h-[300px]">
         <p className="text-textSecondary">Add some activities to start tracking.</p>
       </div>
     );
@@ -96,7 +96,7 @@ export default function DailyChecklist({
         ref={scrollContainerRef}
       >
         <table className="w-full text-sm text-left border-collapse">
-          <thead className="text-xs uppercase text-textSecondary sticky top-0 z-10 bg-backgroundSecondary/80 backdrop-blur-md">
+          <thead className="text-xs uppercase text-textSecondary sticky top-0 z-10 bg-backgroundSecondary/60 backdrop-blur-md">
             <tr>
               <th
                 scope="col"
@@ -113,7 +113,7 @@ export default function DailyChecklist({
                     key={day}
                     ref={isToday ? todayRef : null}
                     scope="col"
-                    className={`px-2 py-4 text-center min-w-[40px] font-medium border-l border-borderPrimary ${isToday ? "text-textPrimary bg-backgroundSecondary" : ""}`}
+                    className={`px-2 py-4 text-center min-w-[40px] font-medium border border-borderPrimary ${isToday ? "text-green-500 bg-backgroundSecondary" : ""}`}
                   >
                     {day}
                   </th>
@@ -121,7 +121,7 @@ export default function DailyChecklist({
               })}
             </tr>
           </thead>
-          <tbody className="divide-y divide-zinc-800">
+          <tbody className="divide-y divide-borderPrimary">
             {activities.map((activity) => (
               <tr
                 key={activity._id as unknown as string}

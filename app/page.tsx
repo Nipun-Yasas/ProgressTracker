@@ -77,13 +77,6 @@ export default function Home() {
   };
 
   const handleDeleteActivity = async (id: string) => {
-    if (
-      !confirm(
-        "Are you sure? This will delete the activity and all its history.",
-      )
-    )
-      return;
-
     try {
       const res = await fetch(`/api/activities/${id}`, {
         method: "DELETE",
@@ -189,7 +182,7 @@ export default function Home() {
               <Target className="w-5 h-5 sm:w-8 sm:h-8 text-secondary" />
             </div>
             <div className="flex flex-col">
-              <h1 className="text-xl sm:text-3xl font-bold tracking-tight">Progress Flow</h1>
+              <h1 className="text-xl sm:text-3xl font-bold tracking-tight">Progress Tracker</h1>
               <p className="text-textSecondary text-[10px] sm:text-sm leading-tight">
                 Stay consistent, track your daily habits.
               </p>

@@ -127,12 +127,7 @@ export default function Targets() {
 
   return (
     <div className="bg-backgroundSecondary/60 p-6 rounded-2xl border border-borderPrimary space-y-6">
-      <div className="flex items-center gap-3">
-        <div className="bg-secondary/10 p-2 rounded-xl border border-secondary/20">
-          <Target className="w-5 h-5 text-secondary" />
-        </div>
-        <h2 className="text-xl font-bold tracking-tight">Main Targets</h2>
-      </div>
+      <h2 className="text-xl font-bold tracking-tight">Main Targets</h2>
 
       <div className="space-y-4">
         {targets.length > 0 ? (
