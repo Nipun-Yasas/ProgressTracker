@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Plus, Trash2, Activity as ActivityIcon } from "lucide-react";
 import { IActivity } from "@/lib/models/Activity";
+import DeleteConfirmationDialog from "@/components/Model";
 
 interface ActivityManagerProps {
   activities: IActivity[];
@@ -19,6 +20,7 @@ export default function ActivityManager({
 }: ActivityManagerProps) {
   const [newActivityName, setNewActivityName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [activityToDelete, setActivityToDelete] = useState<IActivity | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,6 +33,22 @@ export default function ActivityManager({
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleRequestDelete = (activity: IActivity) => {
+    setActivityToDelete(activity);
+  };
+
+  const handleCancelDelete = () => {
+    setActivityToDelete(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!activityToDelete) return;
+
+    const activityId = activityToDelete._id as unknown as string;
+    setActivityToDelete(null);
+    await onDeleteActivity(activityId);
   };
 
   return (
@@ -74,9 +92,7 @@ export default function ActivityManager({
                 {activity.name}
               </span>
               <button
-                onClick={() =>
-                  onDeleteActivity(activity._id as unknown as string)
-                }
+                onClick={() => handleRequestDelete(activity)}
                 disabled={isLoading}
                 className="text-textSecondary hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all focus:opacity-100 p-1 rounded hover:bg-hoverPrimary disabled:opacity-50"
                 aria-label="Delete activity"
@@ -88,6 +104,13 @@ export default function ActivityManager({
           ))
         )}
       </div>
+
+      <DeleteConfirmationDialog
+        open={activityToDelete !== null}
+        itemName={activityToDelete?.name ?? "this activity"}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+      />
     </div>
   );
 }
