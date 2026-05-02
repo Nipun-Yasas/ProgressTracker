@@ -1,14 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Trash2, Activity as ActivityIcon } from "lucide-react";
+import { Plus, Trash2, Edit2, Activity as ActivityIcon } from "lucide-react";
 import { IActivity } from "@/lib/models/Activity";
 import DeleteConfirmationDialog from "@/components/Model";
+import EditActivityDialog from "@/components/EditActivityDialog";
 
 interface ActivityManagerProps {
   activities: IActivity[];
   onAddActivity: (name: string) => Promise<void>;
   onDeleteActivity: (id: string) => Promise<void>;
+  onEditActivity: (id: string, newName: string) => Promise<void>;
   isLoading?: boolean;
 }
 
@@ -16,11 +18,13 @@ export default function ActivityManager({
   activities,
   onAddActivity,
   onDeleteActivity,
+  onEditActivity,
   isLoading = false,
 }: ActivityManagerProps) {
   const [newActivityName, setNewActivityName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activityToDelete, setActivityToDelete] = useState<IActivity | null>(null);
+  const [activityToEdit, setActivityToEdit] = useState<IActivity | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,6 +53,22 @@ export default function ActivityManager({
     const activityId = activityToDelete._id as unknown as string;
     setActivityToDelete(null);
     await onDeleteActivity(activityId);
+  };
+
+  const handleRequestEdit = (activity: IActivity) => {
+    setActivityToEdit(activity);
+  };
+
+  const handleCancelEdit = () => {
+    setActivityToEdit(null);
+  };
+
+  const handleConfirmEdit = async (newName: string) => {
+    if (!activityToEdit) return;
+
+    const activityId = activityToEdit._id as unknown as string;
+    setActivityToEdit(null);
+    await onEditActivity(activityId, newName);
   };
 
   return (
@@ -91,15 +111,34 @@ export default function ActivityManager({
               <span className="text-sm font-medium text-textPrimary truncate pr-4">
                 {activity.name}
               </span>
-              <button
-                onClick={() => handleRequestDelete(activity)}
-                disabled={isLoading}
-                className="text-textSecondary hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all focus:opacity-100 p-1 rounded hover:bg-hoverPrimary disabled:opacity-50"
-                aria-label="Delete activity"
-                title="Delete activity"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleRequestEdit(activity);
+                  }}
+                  disabled={isLoading}
+                  className="text-textSecondary hover:text-blue-400 opacity-0 group-hover:opacity-100 transition-all focus:opacity-100 p-1 rounded hover:bg-hoverPrimary disabled:opacity-50"
+                  aria-label="Edit activity"
+                  title="Edit activity"
+                >
+                  <Edit2 className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleRequestDelete(activity);
+                  }}
+                  disabled={isLoading}
+                  className="text-textSecondary hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all focus:opacity-100 p-1 rounded hover:bg-hoverPrimary disabled:opacity-50"
+                  aria-label="Delete activity"
+                  title="Delete activity"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
             </div>
           ))
         )}
@@ -110,6 +149,13 @@ export default function ActivityManager({
         itemName={activityToDelete?.name ?? "this activity"}
         onConfirm={handleConfirmDelete}
         onCancel={handleCancelDelete}
+      />
+
+      <EditActivityDialog
+        open={activityToEdit !== null}
+        activityName={activityToEdit?.name ?? ""}
+        onConfirm={handleConfirmEdit}
+        onCancel={handleCancelEdit}
       />
     </div>
   );
