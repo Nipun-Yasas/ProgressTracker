@@ -97,6 +97,34 @@ export default function Home() {
     }
   };
 
+  const handleEditActivity = async (id: string, newName: string) => {
+    try {
+      const res = await fetch(`/api/activities/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: newName }),
+      });
+
+      if (res.ok) {
+        const updatedActivity = await res.json();
+        setActivities((prev) =>
+          prev.map((a) =>
+            (a._id as unknown as string) === id
+              ? updatedActivity
+              : a,
+          ),
+        );
+        toast.success("Activity updated");
+      } else {
+        const error = await res.json();
+        toast.error(error.error || "Failed to update activity");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Error updating activity");
+    }
+  };
+
   const handleToggleTick = async (
     activityId: string,
     date: string,
@@ -215,6 +243,7 @@ export default function Home() {
                   activities={activities}
                   onAddActivity={handleAddActivity}
                   onDeleteActivity={handleDeleteActivity}
+                  onEditActivity={handleEditActivity}
                   isLoading={isLoading}
                 />
               </div>

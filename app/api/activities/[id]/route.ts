@@ -6,10 +6,6 @@ import { auth } from "@clerk/nextjs/server";
 
 import { unstable_noStore as noStore } from "next/cache";
 
-export function generateStaticParams() {
-  return [];
-}
-
 export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
