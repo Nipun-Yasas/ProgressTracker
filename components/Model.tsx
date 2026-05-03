@@ -3,6 +3,9 @@
 interface DeleteConfirmationDialogProps {
   open: boolean;
   itemName: string;
+  itemLabel?: string;
+  title?: string;
+  confirmLabel?: string;
   onConfirm: () => void;
   onCancel: () => void;
 }
@@ -10,6 +13,9 @@ interface DeleteConfirmationDialogProps {
 export default function DeleteConfirmationDialog({
   open,
   itemName,
+  itemLabel = "activity",
+  title = "Delete activity",
+  confirmLabel = "Delete activity",
   onConfirm,
   onCancel,
 }: DeleteConfirmationDialogProps) {
@@ -35,10 +41,10 @@ export default function DeleteConfirmationDialog({
             id="delete-activity-title"
             className="text-lg font-semibold text-textPrimary"
           >
-            Delete activity
+            {title}
           </h3>
           <p className="mt-2 text-sm text-textSecondary">
-            Are you sure you want to delete {itemName}? This will remove the activity and all of its history.
+            Are you sure you want to delete {itemName}? This will remove the {itemLabel} and all of its history.
           </p>
         </div>
 
@@ -55,7 +61,7 @@ export default function DeleteConfirmationDialog({
             onClick={onConfirm}
             className="inline-flex justify-center rounded-lg bg-red-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-400"
           >
-            Delete activity
+            {confirmLabel}
           </button>
         </div>
       </div>
