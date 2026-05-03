@@ -5,6 +5,10 @@ import { useState, useEffect } from 'react';
 interface EditActivityDialogProps {
   open: boolean;
   activityName: string;
+  title?: string;
+  description?: string;
+  inputPlaceholder?: string;
+  confirmLabel?: string;
   onConfirm: (newName: string) => void;
   onCancel: () => void;
 }
@@ -12,6 +16,10 @@ interface EditActivityDialogProps {
 export default function EditActivityDialog({
   open,
   activityName,
+  title = 'Edit activity',
+  description = 'Update the name of your activity.',
+  inputPlaceholder = 'Activity name',
+  confirmLabel = 'Save changes',
   onConfirm,
   onCancel,
 }: EditActivityDialogProps) {
@@ -61,10 +69,10 @@ export default function EditActivityDialog({
             id="edit-activity-title"
             className="text-lg font-semibold text-textPrimary"
           >
-            Edit activity
+            {title}
           </h3>
           <p className="mt-2 text-sm text-textSecondary">
-            Update the name of your activity.
+            {description}
           </p>
         </div>
 
@@ -74,7 +82,7 @@ export default function EditActivityDialog({
             value={editedName}
             onChange={(e) => setEditedName(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Activity name"
+            placeholder={inputPlaceholder}
             autoFocus
             className="w-full bg-backgroundSecondary border border-borderPrimary rounded-lg px-4 py-2 text-sm text-textPrimary placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
           />
@@ -94,7 +102,7 @@ export default function EditActivityDialog({
             disabled={!editedName.trim() || editedName.trim() === activityName}
             className="inline-flex justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary/90 disabled:bg-primary/50 disabled:cursor-not-allowed"
           >
-            Save changes
+            {confirmLabel}
           </button>
         </div>
       </div>

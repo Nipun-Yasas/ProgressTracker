@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { Target, Plus, Edit2, Trash2, Check, X } from "lucide-react";
+import { Plus, Edit2, Trash2 } from "lucide-react";
+import DeleteConfirmationDialog from "@/components/Model";
+import EditActivityDialog from "@/components/EditActivityDialog";
 
 interface ITarget {
   _id: string;
@@ -13,8 +15,8 @@ export default function Targets() {
   const [targets, setTargets] = useState<ITarget[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [newDescription, setNewDescription] = useState("");
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editDescription, setEditDescription] = useState("");
+  const [targetToDelete, setTargetToDelete] = useState<ITarget | null>(null);
+  const [targetToEdit, setTargetToEdit] = useState<ITarget | null>(null);
 
   useEffect(() => {
     fetchTargets();
@@ -64,8 +66,6 @@ export default function Targets() {
   };
 
   const handleDeleteTarget = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this target?")) return;
-
     try {
       const res = await fetch(`/api/targets/${id}`, {
         method: "DELETE",
@@ -83,18 +83,39 @@ export default function Targets() {
     }
   };
 
-  const handleEditTarget = (id: string, currentDesc: string) => {
-    setEditingId(id);
-    setEditDescription(currentDesc);
+  const handleRequestDelete = (target: ITarget) => {
+    setTargetToDelete(target);
   };
 
-  const handleSaveEdit = async (id: string) => {
-    if (!editDescription.trim()) return;
+  const handleCancelDelete = () => {
+    setTargetToDelete(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!targetToDelete) return;
+
+    const targetId = targetToDelete._id;
+    setTargetToDelete(null);
+    await handleDeleteTarget(targetId);
+  };
+
+  const handleRequestEdit = (target: ITarget) => {
+    setTargetToEdit(target);
+  };
+
+  const handleCancelEdit = () => {
+    setTargetToEdit(null);
+  };
+
+  const handleConfirmEdit = async (newDescription: string) => {
+    if (!targetToEdit) return;
+
+    const id = targetToEdit._id;
     try {
       const res = await fetch(`/api/targets/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ description: editDescription.trim() }),
+        body: JSON.stringify({ description: newDescription }),
       });
 
       if (res.ok) {
@@ -102,7 +123,7 @@ export default function Targets() {
         setTargets((prev) =>
           prev.map((t) => (t._id === id ? updatedTarget : t)),
         );
-        setEditingId(null);
+        setTargetToEdit(null);
         toast.success("Target updated");
       } else {
         toast.error("Failed to update target");
@@ -137,55 +158,27 @@ export default function Targets() {
                 key={target._id}
                 className="flex items-center justify-between bg-backgroundSecondary hover:bg-hoverPrimary p-3 rounded-xl border border-borderPrimary group"
               >
-                {editingId === target._id ? (
-                  <div className="flex items-center flex-1 gap-2">
-                    <input
-                      type="text"
-                      value={editDescription}
-                      onChange={(e) => setEditDescription(e.target.value)}
-                      className="flex-1 bg-hoverPrimary/50 border border-borderPrimary rounded-lg px-3 py-1.5 text-sm text-textPrimary focus:outline-none focus:ring-2 focus:ring-secondary/50"
-                      autoFocus
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") handleSaveEdit(target._id);
-                        if (e.key === "Escape") setEditingId(null);
-                      }}
-                    />
-                    <button
-                      onClick={() => handleSaveEdit(target._id)}
-                      className="p-1.5 text-primary hover:bg-primary/10 rounded-md transition-colors"
-                    >
-                      <Check className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => setEditingId(null)}
-                      className="p-1.5 text-red-500 hover:bg-red-500/10 rounded-md transition-colors"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-                ) : (
-                  <>
-                    <span className="text-textPrimary text-sm flex-1">
-                      {target.description}
-                    </span>
-                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button
-                        onClick={() =>
-                          handleEditTarget(target._id, target.description)
-                        }
-                        className="p-1.5 text-textSecondary hover:text-secondary hover:bg-secondary/10 rounded-md transition-colors title='Edit Target'"
-                      >
-                        <Edit2 className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteTarget(target._id)}
-                        className="p-1.5 text-textSecondary hover:text-red-500 hover:bg-red-500/10 rounded-md transition-colors title='Delete Target'"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </>
-                )}
+                <span className="text-textPrimary text-sm flex-1">
+                  {target.description}
+                </span>
+                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button
+                    onClick={() => handleRequestEdit(target)}
+                    className="p-1.5 text-textSecondary hover:text-secondary hover:bg-secondary/10 rounded-md transition-colors"
+                    title="Edit target"
+                    aria-label="Edit target"
+                  >
+                    <Edit2 className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => handleRequestDelete(target)}
+                    className="p-1.5 text-textSecondary hover:text-red-500 hover:bg-red-500/10 rounded-md transition-colors"
+                    title="Delete target"
+                    aria-label="Delete target"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               </li>
             ))}
           </ul>
@@ -213,6 +206,27 @@ export default function Targets() {
           </button>
         </form>
       </div>
+
+      <DeleteConfirmationDialog
+        open={targetToDelete !== null}
+        itemName={targetToDelete?.description ?? "this target"}
+        itemLabel="target"
+        title="Delete target"
+        confirmLabel="Delete target"
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+      />
+
+      <EditActivityDialog
+        open={targetToEdit !== null}
+        activityName={targetToEdit?.description ?? ""}
+        title="Edit target"
+        description="Update the description of your target."
+        inputPlaceholder="Target description"
+        confirmLabel="Save changes"
+        onConfirm={handleConfirmEdit}
+        onCancel={handleCancelEdit}
+      />
     </div>
   );
 }
